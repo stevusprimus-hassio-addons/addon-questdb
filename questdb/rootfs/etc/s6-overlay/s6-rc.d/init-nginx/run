@@ -3,7 +3,6 @@
 # Home Assistant Community Add-on: InfluxDB
 # Configures NGINX for use with the Chronograf
 # ==============================================================================
-declare admin_port
 
 # Generate Ingress configuration
 bashio::var.json \
@@ -14,13 +13,11 @@ bashio::var.json \
         -out /etc/nginx/servers/ingress.conf
 bashio::log.info "Generate Ingress $(bashio::addon.ip_address):$(bashio::addon.ingress_port)"
 
-
-
 if bashio::config.true 'ssl'; then
 # Generate influxdb protocol SSL configuration
     bashio::var.json \
         interface "$(bashio::addon.ip_address)" \
-        port "^$(bashio::config 'ssl_port_influxdb')" \
+        port "9449" \
         certfile "$(bashio::config 'certfile')" \
         keyfile "$(bashio::config 'keyfile')" \
         | tempio \

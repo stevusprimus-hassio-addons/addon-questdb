@@ -38,10 +38,16 @@ options:
   keyfile: privkey.pem
   envvars: []
   log_level: info
+  data_dir: /config/questdb/data
+  log_dir: /config/questdb/logs
+  conf_dir: /config/questdb/conf
 schema:
   log_level: list(trace|debug|info|notice|warning|error|fatal)?
   # auth: bool
   # reporting: bool
+  data_dir: str
+  log_dir: str
+  conf_dir: str
   ssl: bool
   certfile: str
   keyfile: str

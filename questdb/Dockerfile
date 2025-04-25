@@ -28,10 +28,6 @@ FROM questdb/questdb:8.3.0 AS builder
 FROM base
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bin/gosu /usr/local/bin/gosu
-COPY --from=builder /docker-entrypoint.sh /
-
-RUN chmod +x /docker-entrypoint.sh
-
 WORKDIR /app
 
 # Create questdb user and group
@@ -44,6 +40,7 @@ WORKDIR /var/lib/questdb
 
 # Copy root filesystem
 COPY rootfs /
+RUN chmod +x /docker-entrypoint.sh
 
 # Health check
 HEALTHCHECK --interval=1m --timeout=5s --start-period=30s --retries=3 \

@@ -12,7 +12,7 @@ arch:
 startup: services
 init: false
 ingress: true
-ingress_port: 9000
+ingress_port: 9443
 ingress_stream: true
 privileged:
   - PERFMON
@@ -26,10 +26,11 @@ ports_description:
   8812/tcp: PostgreSQL wire protocol
   9449/tcp: InfluxDB Line Protocol (SSL)
   9009/tcp: InfluxDB Line Protocol
-auth_api: true
 map:
   - addon_config:rw
   - ssl
+  - share:rw
+auth_api: true
 options:
   # auth: true
   # reporting: true

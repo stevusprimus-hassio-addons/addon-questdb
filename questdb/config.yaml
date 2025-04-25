@@ -17,7 +17,7 @@ ingress_stream: true
 privileged:
   - PERFMON
 ports:
-  9000/tcp: 
+  9000/tcp:
   8812/tcp: 8812
   9009/tcp: 9009
 ports_description:

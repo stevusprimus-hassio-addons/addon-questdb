@@ -13,7 +13,6 @@ startup: services
 init: false
 ingress: true
 ingress_port: 9443
-ingress_stream: true
 privileged:
   - PERFMON
 ports:

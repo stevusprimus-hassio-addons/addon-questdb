@@ -46,7 +46,7 @@ WORKDIR /var/lib/questdb
 COPY rootfs /
 
 # Health check
-HEALTHCHECK \
+HEALTHCHECK --interval=1m --timeout=5s --start-period=30s --retries=3 \
     CMD curl --fail http://127.0.0.1:9000/index.html || exit 1
 
 # Build arguments

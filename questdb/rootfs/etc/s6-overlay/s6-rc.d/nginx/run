@@ -4,7 +4,7 @@
 # Runs the NGINX daemon
 # ==============================================================================
 # Wait for QuestDB to become available
-bashio::net.wait_for 9000 localhost 9000
+bashio::net.wait_for 9000 localhost 900
 
 bashio::log.info "Starting NGINX..."
 

@@ -12,7 +12,7 @@ arch:
 startup: services
 init: false
 ingress: true
-ingress_port: 9000
+ingress_port: 0
 privileged:
   - PERFMON
 ports:

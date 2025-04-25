@@ -7,13 +7,10 @@ FROM $BUILD_FROM AS base
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Setup NGINX
-ARG BUILD_ARCH=amd64
-
-# hadolint ignore=DL3008
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
-        nginx \
+        nginx=1.22.1-9 \
     \
     && rm -fr \
         /tmp/* \
@@ -25,8 +22,6 @@ RUN \
     && touch /var/log/nginx/error.log
 
 # Setup QuestDB
-ARG BUILD_ARCH=amd64
-
 # Copy everything over
 FROM questdb/questdb:8.3.0 AS builder
 FROM base

@@ -2,7 +2,7 @@
 name: QuestDB
 version: dev
 url: https://questdb.com/
-image: "ghcr.io/stevusprimus-hassio-addons/questdb/{arch}"
+image: ghcr.io/stevusprimus-hassio-addons/questdb/{arch}
 panel_icon: mdi:face-recognition
 slug: questdb
 description: QuestDB is the fastest growing open-source time-series database
@@ -12,11 +12,12 @@ arch:
 startup: services
 init: false
 ingress: true
+ingress_entry: index.html
 ingress_port: 9443
 privileged:
   - PERFMON
 ports:
-  9000/tcp:
+  9000/tcp: null
   8812/tcp: 8812
   9009/tcp: 9009
   9449/tcp: 9449
@@ -29,7 +30,6 @@ map:
   - addon_config:rw
   - ssl
   - share:rw
-auth_api: true
 options:
   # auth: true
   # reporting: true

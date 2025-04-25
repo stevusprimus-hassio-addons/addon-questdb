@@ -45,7 +45,7 @@ WORKDIR /var/lib/questdb
 COPY rootfs /
 
 # Health check
-HEALTHCHECK --start-period=5m \
+HEALTHCHECK --start-period=1m \
     CMD curl --insecure --fail http://localhost:9000 || exit 1
 
 # Build arguments

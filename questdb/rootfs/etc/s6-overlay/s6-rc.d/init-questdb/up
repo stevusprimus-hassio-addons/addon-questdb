@@ -1,1 +1,1 @@
-/etc/s6-overlay/s6-rc.d/questdb/run
+/etc/s6-overlay/s6-rc.d/init-questdb/run

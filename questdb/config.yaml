@@ -2,7 +2,7 @@
 name: QuestDB
 version: dev
 url: https://questdb.com/
-image: "ghcr.io/stevusprimus-hassio-addons/addon-questdb/{arch}"
+image: "ghcr.io/stevusprimus-hassio-addons/questdb/{arch}"
 panel_icon: mdi:face-recognition
 slug: questdb
 description: QuestDB is the fastest growing open-source time-series database

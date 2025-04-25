@@ -24,7 +24,7 @@ ports:
 ports_description:
   9000/tcp: HTTP API (not exposed by default)
   8812/tcp: PostgreSQL wire protocol
-  9449/tcp: InfluxDB Line Protocol (SSL)
+  9449/tcp: InfluxDB Line Protocol SSL (only available when SSL is enabled)
   9009/tcp: InfluxDB Line Protocol
 map:
   - addon_config:rw

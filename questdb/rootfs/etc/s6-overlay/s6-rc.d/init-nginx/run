@@ -13,3 +13,13 @@ bashio::var.json \
         -template /etc/nginx/templates/ingress.gtpl \
         -out /etc/nginx/servers/ingress.conf
 bashio::log.info "Generate Ingress $(bashio::addon.ip_address):$(bashio::addon.ingress_port)"
+
+# Generate influxdb protocol SSL configuration
+bashio::var.json \
+    interface "$(bashio::addon.ip_address)" \
+    port "^$(bashio::config 'ssl_port_influxdb')" \
+    | tempio \
+        -template /etc/nginx/templates/influxlineprotocol.gtpl \
+        -out /etc/nginx/servers/influxlineprotocol.stream
+bashio::log.info "Generate Ingress $(bashio::addon.ip_address):$(bashio::config 'ssl_port_influxdb')""
+

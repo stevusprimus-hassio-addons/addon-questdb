@@ -11,6 +11,7 @@ RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
         nginx=1.22.1-9+deb12u1 \
+        libnginx-mod-stream=1.22.1-9+deb12u1 \
     \
     && rm -fr \
         /tmp/* \

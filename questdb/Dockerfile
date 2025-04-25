@@ -6,8 +6,29 @@ FROM $BUILD_FROM AS base
 # Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# Setup NGINX
+ARG BUILD_ARCH=amd64
 
-# Setup base system
+RUN \
+    apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libnginx-mod-http-lua=1:0.10.23-1 \
+        luarocks=3.8.0+dfsg1-1 \
+        nginx=1.22.1-9 \
+        procps=2:4.0.2-3 \
+    \
+    && luarocks install lua-resty-http 0.15-0 \
+    \
+    && rm -fr \
+        /tmp/* \
+        /etc/nginx \
+        /var/{cache,log}/* \
+        /var/lib/apt/lists/* \
+    \
+    && mkdir -p /var/log/nginx \
+    && touch /var/log/nginx/error.log
+
+# Setup QuestDB
 ARG BUILD_ARCH=amd64
 
 FROM questdb/questdb:8.3.0 AS questdb_image

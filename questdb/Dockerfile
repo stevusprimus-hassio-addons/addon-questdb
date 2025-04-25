@@ -47,7 +47,7 @@ COPY rootfs /
 
 # Health check
 HEALTHCHECK \
-    CMD curl --fail http://127.0.0.1:9000 || exit 1
+    CMD curl --fail http://127.0.0.1:9000/index.html || exit 1
 
 # Build arguments
 ARG BUILD_ARCH

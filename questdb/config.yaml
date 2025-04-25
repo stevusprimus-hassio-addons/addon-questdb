@@ -20,10 +20,12 @@ ports:
   9000/tcp:
   8812/tcp: 8812
   9009/tcp: 9009
+  9449/tcp: 9449
 ports_description:
   9000/tcp: HTTP API (not exposed by default)
-  8812/tcp: InfluxDB Line Protocol
-  9009/tcp: PostgreSQL wire protocol
+  8812/tcp: PostgreSQL wire protocol
+  9449/tcp: InfluxDB Line Protocol (SSL)
+  9009/tcp: InfluxDB Line Protocol
 auth_api: true
 map:
   - addon_config:rw

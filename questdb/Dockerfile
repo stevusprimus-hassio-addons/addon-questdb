@@ -9,6 +9,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Setup NGINX
 ARG BUILD_ARCH=amd64
 
+# hadolint ignore=DL3008
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \

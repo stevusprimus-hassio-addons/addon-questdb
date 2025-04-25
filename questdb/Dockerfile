@@ -27,7 +27,7 @@ FROM questdb/questdb:8.3.0 AS builder
 FROM base
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bin/gosu /usr/local/bin/gosu
-COPY --from=builder /docker-entrypoint.sh /docker-entrypoint.sh
+COPY --from=builder /docker-entrypoint.sh /
 
 RUN chmod +x /docker-entrypoint.sh
 

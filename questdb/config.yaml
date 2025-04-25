@@ -13,6 +13,7 @@ startup: services
 init: false
 ingress: true
 ingress_port: 9443
+ingress_stream: true
 privileged:
   - PERFMON
 ports:
@@ -23,6 +24,7 @@ ports_description:
   9000/tcp: HTTP API
   8812/tcp: InfluxDB Line Protocol
   9009/tcp: PostgreSQL wire protocol
+auth_api: true
 map:
   - addon_config:rw
   - ssl
@@ -43,4 +45,3 @@ schema:
   envvars:
     - name: match(^INFLUXDB_([A-Z0-9_])+$)
       value: str
-  leave_front_door_open: bool?

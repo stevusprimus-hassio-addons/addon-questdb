@@ -25,5 +25,5 @@ bashio::var.json \
         -out /etc/nginx/servers/influxlineprotocol.stream
 bashio::log.info "Generate Ingress $(bashio::addon.ip_address):$(bashio::config 'ssl_port_influxdb')"
 cp /etc/nginx/servers/ingress.conf /config
-cp /etc/nginx/servers/influxlineprotocol.conf /config
+cp /etc/nginx/servers/influxlineprotocol.stream /config
 cp /etc/nginx/nginx.conf /config

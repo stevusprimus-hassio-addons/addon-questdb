@@ -1,0 +1,16 @@
+#!/command/with-contenv bashio
+# ==============================================================================
+# Home Assistant Add-on: QuestDB
+# Runs the NGINX daemon
+# ==============================================================================
+# Wait for QuestDB to become available
+bashio::net.wait_for 9000 localhost 900
+
+bashio::log.info "Starting NGINX..."
+
+# Disable HA Authentication if front door is open
+# if bashio::config.true 'leave_front_door_open'; then
+#     export DISABLE_HA_AUTHENTICATION=true
+# fi
+
+exec nginx

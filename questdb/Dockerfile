@@ -31,14 +31,14 @@ RUN \
 # Setup QuestDB
 ARG BUILD_ARCH=amd64
 
-FROM questdb/questdb:8.3.0 AS questdb_image
+FROM questdb/questdb:8.3.0 AS builder
 
 WORKDIR /app
 
-COPY --from=questdb_image /app .
-COPY --from=questdb_image /usr/local/bin/gosu /usr/local/bin/gosu
+COPY --from=builder /app .
+COPY --from=builder /usr/local/bin/gosu /usr/local/bin/gosu
 
-COPY --from=questdb_image /docker-entrypoint.sh /docker-entrypoint.sh
+COPY --from=builder /docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 # Create questdb user and group
@@ -48,11 +48,6 @@ RUN groupadd -g 10001 questdb && \
     chown -R questdb:questdb /var/lib/questdb
 
 WORKDIR /var/lib/questdb
-
-# Make port 9000 available to the world outside this container
-EXPOSE 9000/tcp
-EXPOSE 8812/tcp
-EXPOSE 9009/tcp
 
 # Copy root filesystem
 COPY rootfs /

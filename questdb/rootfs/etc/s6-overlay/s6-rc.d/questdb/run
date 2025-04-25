@@ -10,6 +10,7 @@ DO_CHOWN=${DO_CHOWN:-"true"}
 QUESTDB_UID="${QUESTDB_UID:-"$(id -u questdb)"}"
 QUESTDB_GID="${QUESTDB_GID:-"$(id -g questdb)"}"
 JAVA_COMMAND="/app/bin/java"
+JVM_PREPEND=${JVM_PREPEND:-""}
 
 # directories inside QUESTDB_DATA_DIR that we will chown
 DEFAULT_LOCAL_DIRS=${DEFAULT_LOCAL_DIRS:-"/conf /public /db /.checkpoint /snapshot"}

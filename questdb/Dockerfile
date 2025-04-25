@@ -32,13 +32,11 @@ RUN \
 ARG BUILD_ARCH=amd64
 
 # Copy everything over
-FROM questdb/questdb:8.3.0 AS builder0
-# hadolint ignore=DL3023
-COPY --from=builder0 /app /app
-# hadolint ignore=DL3023
-COPY --from=builder0 /usr/local/bin/gosu /usr/local/bin/gosu
-# hadolint ignore=DL3023
-COPY --from=builder0 /docker-entrypoint.sh /docker-entrypoint.sh
+FROM questdb/questdb:8.3.0 AS builder
+FROM base
+COPY --from=builder /app /app
+COPY --from=builder /usr/local/bin/gosu /usr/local/bin/gosu
+COPY --from=builder /docker-entrypoint.sh /docker-entrypoint.sh
 
 RUN chmod +x /docker-entrypoint.sh
 

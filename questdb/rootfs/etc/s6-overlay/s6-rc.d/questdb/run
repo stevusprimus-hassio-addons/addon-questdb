@@ -6,4 +6,4 @@ bashio::log.info "Running as $(id -un 2>/dev/null) user"
 
 # Run it
 cd /var/lib/questdb
-exec "/entrypoint.sh"
+exec "/docker-entrypoint.sh"

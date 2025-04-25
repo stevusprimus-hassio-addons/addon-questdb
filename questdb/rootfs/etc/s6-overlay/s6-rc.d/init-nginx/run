@@ -21,4 +21,4 @@ bashio::var.json \
     | tempio \
         -template /etc/nginx/templates/influxlineprotocol.gtpl \
         -out /etc/nginx/servers/influxlineprotocol.stream
-bashio::log.info "Generate Ingress $(bashio::addon.ip_address):$(bashio::config 'ssl_port_influxdb')""
+bashio::log.info "Generate Ingress $(bashio::addon.ip_address):$(bashio::config 'ssl_port_influxdb')"

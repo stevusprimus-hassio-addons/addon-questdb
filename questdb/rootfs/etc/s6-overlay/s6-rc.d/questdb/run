@@ -5,4 +5,4 @@ bashio::log.info "Starting QuestDB"
 bashio::log.info "Running as $(id -un 2>/dev/null) user"
 
 cd /var/lib/questdb
-exec "/entrypoint.sh"
+exec "bash /entrypoint.sh"

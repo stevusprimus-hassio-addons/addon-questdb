@@ -1,0 +1,30 @@
+---
+name: QuestDB
+version: dev
+url: https://questdb.com/
+image: "ghcr.io/stevusprimus-hassio-addons/addon-questdb/{arch}"
+panel_icon: mdi:face-recognition
+slug: questdb
+description: QuestDB is the fastest growing open-source time-series database
+arch:
+  - amd64
+  - aarch64
+startup: services
+init: false
+ingress: true
+ingress_port: 9000
+privileged:
+  - PERFMON
+ports:
+  9000/tcp: 9000
+  8812/tcp: 8812
+  9009/tcp: 9009
+ports_description:
+  9000/tcp: HTTP API
+  8812/tcp: InfluxDB Line Protocol
+  9009/tcp: PostgreSQL wire protocol
+map:
+  - addon_config:rw
+  - ssl:r
+environment:
+  HA_ADDON: "true"

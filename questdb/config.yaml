@@ -12,7 +12,7 @@ arch:
 startup: services
 init: false
 ingress: true
-ingress_port: 9443
+ingress_port: 9000
 ingress_stream: true
 privileged:
   - PERFMON
@@ -36,8 +36,8 @@ options:
   ssl: true
   certfile: fullchain.pem
   keyfile: privkey.pem
-  ssl_port_influxdb: 9449
   envvars: []
+  log_level: info
 schema:
   log_level: list(trace|debug|info|notice|warning|error|fatal)?
   # auth: bool
@@ -45,7 +45,6 @@ schema:
   ssl: bool
   certfile: str
   keyfile: str
-  ssl_port_influxdb: int(1,65535)?
   envvars:
     - name: match(^QUESTDB_([A-Z0-9_])+$)
       value: str

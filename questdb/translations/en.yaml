@@ -15,10 +15,12 @@ configuration:
   log_level:
     name: Log level
     description: The log level to use for the QuestDB process.
-  data_dir:
-    name: Data directory
-    description: The directory to store the QuestDB data.
-network:  
+  logins_influx_line_protocol:
+    name: Influx Line Protocol logins
+    description: |
+      Logins for the Influx Line Protocol. See https://questdb.com/docs/reference/api/ilp/overview/#authentication for more information.
+      Format is a list of objects with the following keys: `kid`, `key_type`, `x`, `y`.
+network:
   9000/tcp: HTTP API (not exposed by default)
   8812/tcp: PostgreSQL wire protocol
   9449/tcp: InfluxDB Line Protocol SSL (only available when SSL is enabled)

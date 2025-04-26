@@ -10,14 +10,14 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
-        nginx=1.22.1-9+deb12u1 \
-        libnginx-mod-stream=1.22.1-9+deb12u1 \
+    nginx=1.22.1-9+deb12u1 \
+    libnginx-mod-stream=1.22.1-9+deb12u1 \
     \
     && rm -fr \
-        /tmp/* \
-        /etc/nginx \
-        /var/{cache,log}/* \
-        /var/lib/apt/lists/* \
+    /tmp/* \
+    /etc/nginx \
+    /var/{cache,log}/* \
+    /var/lib/apt/lists/* \
     \
     && mkdir -p /var/log/nginx \
     && touch /var/log/nginx/error.log
@@ -40,7 +40,6 @@ WORKDIR /var/lib/questdb
 
 # Copy root filesystem
 COPY rootfs /
-RUN chmod +x /docker-entrypoint.sh
 
 # Health check
 HEALTHCHECK --interval=1m --timeout=5s --start-period=30s --retries=3 \

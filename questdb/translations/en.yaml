@@ -1,0 +1,28 @@
+---
+configuration:
+  ssl:
+    name: Enable SSL
+    description: Enable usage of SSL on the webserver and the Influx Line Prorocol.
+  certfile:
+    name: Certificate file
+    description: The certificate file to use for SSL.
+  keyfile:
+    name: Key file
+    description: The key file to use for SSL.
+  envvars:
+    name: Environment variables
+    description: Environment variables to pass to the QuestDB process.
+  log_level:
+    name: Log level
+    description: The log level to use for the QuestDB process.
+  logins_influx_line_protocol:
+    name: Influx Line Protocol logins
+    description: |
+      Logins for the Influx Line Protocol.
+      Format is a list of objects with the following keys: `kid`, `key_type`, `x`, `y`.
+      See https://questdb.com/docs/reference/api/ilp/overview/#authentication for more information.
+network:
+  9000/tcp: HTTP API (not exposed by default)
+  8812/tcp: PostgreSQL wire protocol
+  9449/tcp: InfluxDB Line Protocol SSL (only available when SSL is enabled)
+  9009/tcp: InfluxDB Line Protocol

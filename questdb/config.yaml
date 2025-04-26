@@ -5,7 +5,7 @@ url: https://questdb.com/
 image: ghcr.io/stevusprimus-hassio-addons/questdb/{arch}
 panel_icon: mdi:face-recognition
 slug: questdb
-description: QuestDB is the fastest growing open-source time-series database
+description: QuestDB is the fastest growing open-source time-series databases
 arch:
   - amd64
   - aarch64
@@ -31,26 +31,20 @@ map:
   - ssl
   - share:rw
 options:
-  # auth: true
-  # reporting: true
-  ssl: true
+  ssl: false
   certfile: fullchain.pem
   keyfile: privkey.pem
-  envvars: []
-  log_level: info
-  data_dir: /config/questdb/data
-  log_dir: /config/questdb/logs
-  conf_dir: /config/questdb/conf
+  logins_influx_line_protocol: []
 schema:
   log_level: list(trace|debug|info|notice|warning|error|fatal)?
-  # auth: bool
-  # reporting: bool
-  data_dir: str
-  log_dir: str
-  conf_dir: str
   ssl: bool
   certfile: str
   keyfile: str
+  logins_influx_line_protocol:
+    - kid: str
+      key_type: str
+      x: str
+      y: str
   envvars:
     - name: match(^QUESTDB_([A-Z0-9_])+$)
       value: str

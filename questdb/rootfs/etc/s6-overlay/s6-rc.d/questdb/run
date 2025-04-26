@@ -1,9 +1,7 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
 
-bashio::log.info "Starting QuestDB"
+bashio::log.info "Starting QuestDB..."
 bashio::log.info "Running as $(id -un 2>/dev/null) user"
-
-# Run it
-cd /var/lib/questdb
-exec "/docker-entrypoint.sh"
+bashio::log.info Running "$*"
+exec "$@"

@@ -18,8 +18,9 @@ configuration:
   logins_influx_line_protocol:
     name: Influx Line Protocol logins
     description: |
-      Logins for the Influx Line Protocol. See https://questdb.com/docs/reference/api/ilp/overview/#authentication for more information.
+      Logins for the Influx Line Protocol.
       Format is a list of objects with the following keys: `kid`, `key_type`, `x`, `y`.
+      See https://questdb.com/docs/reference/api/ilp/overview/#authentication for more information.
 network:
   9000/tcp: HTTP API (not exposed by default)
   8812/tcp: PostgreSQL wire protocol

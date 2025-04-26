@@ -18,7 +18,7 @@ configuration:
   data_dir:
     name: Data directory
     description: The directory to store the QuestDB data.
-network:  
+network:
   9000/tcp: HTTP API (not exposed by default)
   8812/tcp: PostgreSQL wire protocol
   9449/tcp: InfluxDB Line Protocol SSL (only available when SSL is enabled)

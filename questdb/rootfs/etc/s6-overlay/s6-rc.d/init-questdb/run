@@ -8,7 +8,6 @@ set -Eeo pipefail
 #set -x
 export QDB_PACKAGE=${QDB_PACKAGE:-docker}
 
-#QUESTDB_DATA_DIR=${QUESTDB_DATA_DIR:-"/var/lib/questdb"}
 QUESTDB_DATA_DIR=${QUESTDB_DATA_DIR:-"/data/questdb"}
 IGNORE_DATA_ROOT_MOUNT_CHECK=${IGNORE_DATA_ROOT_MOUNT_CHECK:-"false"}
 RUN_AS_ROOT=${RUN_AS_ROOT:-"false"}
@@ -26,6 +25,7 @@ mkdir -p "$QUESTDB_DATA_DIR/db"
 mkdir -p "$QUESTDB_DATA_DIR/.checkpoint"
 mkdir -p "$QUESTDB_DATA_DIR/snapshot"
 chown -R questdb:questdb "$QUESTDB_DATA_DIR"
+chown -R questdb:questdb "/config/questdb/conf"
 
 # directories inside QUESTDB_DATA_DIR that we will chown
 DEFAULT_LOCAL_DIRS=${DEFAULT_LOCAL_DIRS:-"/conf /public /db /.checkpoint /snapshot"}

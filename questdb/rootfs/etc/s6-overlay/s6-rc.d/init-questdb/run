@@ -2,3 +2,125 @@
 # shellcheck shell=bash
 
 bashio::log.info "Initialize QuestDB"
+
+#!/usr/bin/env bash
+set -Eeo pipefail
+#set -x
+export QDB_PACKAGE=${QDB_PACKAGE:-docker}
+
+#QUESTDB_DATA_DIR=${QUESTDB_DATA_DIR:-"/var/lib/questdb"}
+QUESTDB_DATA_DIR=${QUESTDB_DATA_DIR:-"/data/questdb"}
+IGNORE_DATA_ROOT_MOUNT_CHECK=${IGNORE_DATA_ROOT_MOUNT_CHECK:-"false"}
+RUN_AS_ROOT=${RUN_AS_ROOT:-"false"}
+DO_CHOWN=${DO_CHOWN:-"true"}
+QUESTDB_UID="${QUESTDB_UID:-"$(id -u questdb)"}"
+QUESTDB_GID="${QUESTDB_GID:-"$(id -g questdb)"}"
+JAVA_COMMAND="/app/bin/java"
+JVM_PREPEND=${JVM_PREPEND:-""}
+
+mkdir -p "$QUESTDB_DATA_DIR"
+mkdir -p "/config/questdb/conf"
+ln -s "/config/questdb/conf" "$QUESTDB_DATA_DIR/conf"
+mkdir -p "$QUESTDB_DATA_DIR/public"
+mkdir -p "$QUESTDB_DATA_DIR/db"
+mkdir -p "$QUESTDB_DATA_DIR/.checkpoint"
+mkdir -p "$QUESTDB_DATA_DIR/snapshot"
+chown -R questdb:questdb "$QUESTDB_DATA_DIR"
+
+# directories inside QUESTDB_DATA_DIR that we will chown
+DEFAULT_LOCAL_DIRS=${DEFAULT_LOCAL_DIRS:-"/conf /public /db /.checkpoint /snapshot"}
+array=( ${DEFAULT_LOCAL_DIRS} )
+read -ra LOCALDIRS < <( echo -n "( "; printf -- "-ipath ${QUESTDB_DATA_DIR}%s* -o " "${array[@]:0:$((${#array[@]} - 1))}"; echo -n "-ipath ${QUESTDB_DATA_DIR}${array[@]: -1}*"; echo " )";)
+
+# backwards compatibility with previous versions
+if [ ${IGNORE_FIND_AND_OWN_DIR+x} ]
+then
+    DO_CHOWN=$IGNORE_FIND_AND_OWN_DIR
+fi
+
+find_and_own_dir() {
+    local USER=$1
+    local GROUP=$2
+    [ $(stat --format '%u:%g' ${QUESTDB_DATA_DIR}) == "$USER:$GROUP" ] || chown "$USER:$GROUP" ${QUESTDB_DATA_DIR}
+    find ${QUESTDB_DATA_DIR} "${LOCALDIRS[@]}" \( ! -user $USER -o ! -group $GROUP \) -exec chown $USER:$GROUP '{}' \;
+}
+
+# Temporary only
+# Most of the users will have the data mounted under /root/.questdb as default
+# we will run as root for them until they change the mount to /var/lib/questdb or something else
+if [ "$IGNORE_DATA_ROOT_MOUNT_CHECK" = "false" ] && mount | grep "/root/.questdb" -q; then
+    bashio::log.info "Found /root/.questdb mount, overwriting QUESTDB_DATA_DIR"
+    QUESTDB_DATA_DIR="/root/.questdb"
+fi
+
+bashio::log.info "Check if on-demand JVM arguments are provided through environment variable"
+# Check if on-demand JVM arguments are provided through environment variable
+if [ -n "$JVM_PREPEND" ]; then
+    bashio::log.info "Found on-demand JVM arguments: $JVM_PREPEND, prepending to JVM args"
+    JAVA_COMMAND="$JAVA_COMMAND $JVM_PREPEND"
+fi
+bashio::log.info "Chekcing JAVA_COMMAND"
+# Check if arguments are provided in the configuration file
+if [ $# -eq 0 ]; then
+    bashio::log.info "No arguments found in the configuration, start with default arguments"
+    set -- $JAVA_COMMAND -ea -Dnoebug -XX:+UseParallelGC -XX:ErrorFile=${QUESTDB_DATA_DIR}/db/hs_err_pid+%p.log -Dout=${QUESTDB_DATA_DIR}/conf/log.conf -m io.questdb/io.questdb.ServerMain -d ${QUESTDB_DATA_DIR} -f
+else
+    if [ "${1:0:1}" = '-' ]; then
+        bashio::log.info "Found config arguments $@"
+        set -- $JAVA_COMMAND "$@"
+    elif [ "$1" = "/app/bin/java" ]; then
+        bashio::log.info "Java binary argument found in command, ignoring on-demand JVM arguments, start with fully-customized arguments"
+        set -- "$@"
+    fi
+fi
+
+AUTHFILE="${QUESTDB_DATA_DIR}/conf/auth.txt"
+
+# Generate influxdb protocol auth configuration
+bashio::log.info "Generate InfluxDB Line Protocol auth configuration"
+if [ -f "$AUTHFILE" ]; then
+    bashio::log.info "auth.txt file exists"
+    rm -f "$AUTHFILE"
+else
+    bashio::log.info "auth.txt file does not exist"
+fi
+touch "$AUTHFILE"
+if bashio::config.has_value 'logins_influx_line_protocol'; then
+    for login in $(bashio::config 'logins_influx_line_protocol|keys'); do
+        bashio::config.require "logins_influx_line_protocol[${login}].kid"
+        bashio::config.require "logins_influx_line_protocol[${login}].x"
+        bashio::config.require "logins_influx_line_protocol[${login}].y"
+        bashio::config.require "logins_influx_line_protocol[${login}].key_type"
+        bashio::log.info "Adding login ${login}"
+
+        kid=$(bashio::config "logins_influx_line_protocol[${login}].kid")
+        x=$(bashio::config "logins_influx_line_protocol[${login}].x")
+        y=$(bashio::config "logins_influx_line_protocol[${login}].y")
+        key_type=$(bashio::config "logins_influx_line_protocol[${login}].key_type")
+
+        echo "$kid" "$key_type" "$x" "$y" >> "$AUTHFILE"
+    done
+else
+    bashio::log.info "No logins configured"
+fi
+
+# Check if in ${QUESTDB_DATA_DIR}/conf/server.conf exists the line "line.tcp.auth.db.path=" and if not, add it
+if [ -f "${QUESTDB_DATA_DIR}/conf/server.conf" ] && ! grep -Fxq "line.tcp.auth.db.path=" "${QUESTDB_DATA_DIR}/conf/server.conf"; then
+    bashio::log.info "Adding line.tcp.auth.db.path to server.conf"
+    echo "line.tcp.auth.db.path=conf/auth.txt" >> "${QUESTDB_DATA_DIR}/conf/server.conf"
+fi
+
+bashio::log.info "Starting QuestDB with arguments: $@"
+if [ "$(id -u)" = '0' ] && [ "${QUESTDB_DATA_DIR%/}" != "/root/.questdb" ] && [ "$RUN_AS_ROOT" = "false" ] ; then
+    if [ "$DO_CHOWN" = "true" ]; then
+        bashio::log.info "Checking data directory ownership"
+        find_and_own_dir $QUESTDB_UID $QUESTDB_GID
+    fi
+
+    if [ -x "$(command -v gosu)" ] ; then
+      bashio::log.info "Running as questdb user"
+      exec gosu $QUESTDB_UID:$QUESTDB_GID "$@"
+    fi
+fi
+
+

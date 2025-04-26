@@ -24,10 +24,6 @@ if bashio::config.true 'ssl'; then
             -template /etc/nginx/templates/influxlineprotocol.gtpl \
             -out /etc/nginx/servers/influxlineprotocol.stream
     bashio::log.info "Generate Ingress $(bashio::addon.ip_address):$(bashio::config 'ssl_port_influxdb')"
-    cp /etc/nginx/servers/influxlineprotocol.stream /config
 else
-    bashio::log.info "No SSL port for influxdb line protocol"
+    bashio::log.info "No SSL configured"
 fi
-
-cp /etc/nginx/servers/ingress.conf /config
-cp /etc/nginx/nginx.conf /config

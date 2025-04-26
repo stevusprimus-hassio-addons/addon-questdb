@@ -19,7 +19,9 @@ JVM_PREPEND=${JVM_PREPEND:-""}
 
 mkdir -p "$QUESTDB_DATA_DIR"
 mkdir -p "/config/questdb/conf"
-ln -s "/config/questdb/conf" "$QUESTDB_DATA_DIR/conf"
+if [ ! -L "$QUESTDB_DATA_DIR/conf" ]; then
+    ln -s "/config/questdb/conf/" "$QUESTDB_DATA_DIR/conf"
+fi
 mkdir -p "$QUESTDB_DATA_DIR/public"
 mkdir -p "$QUESTDB_DATA_DIR/db"
 mkdir -p "$QUESTDB_DATA_DIR/.checkpoint"

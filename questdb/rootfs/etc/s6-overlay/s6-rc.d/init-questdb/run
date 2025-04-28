@@ -3,6 +3,19 @@
 
 bashio::log.info "Initialize QuestDB"
 
+
+if bashio::config.has_value 'envvars'; then
+    bashio::log.info "Setting environment variables"
+    for envvar in $(bashio::config 'envvars|keys'); do
+        bashio::config.require "envvars[${envvar}].name"
+        bashio::config.require "envvars[${envvar}].value"
+        name=$(bashio::config "envvars[${envvar}].name")
+        value=$(bashio::config "envvars[${envvar}].value")
+        export "${name}=${value}"
+        bashio::log.info "Set ${name}=${value}"        
+    done
+fi
+
 #!/usr/bin/env bash
 set -Eeo pipefail
 #set -x

@@ -23,7 +23,7 @@ if bashio::config.true 'ssl'; then
         | tempio \
             -template /etc/nginx/templates/influxlineprotocol.gtpl \
             -out /etc/nginx/servers/influxlineprotocol.stream
-    bashio::log.info "Generate Ingress $(bashio::addon.ip_address):$(bashio::config 'ssl_port_influxdb')"
+    bashio::log.info "Generate Ingress $(bashio::addon.ip_address):9449 with SSL"
 else
     bashio::log.info "No SSL configured"
 fi
